@@ -1,4 +1,4 @@
-import React, {useState, useEffect}  from "react";
+import React  from "react";
 
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -12,6 +12,9 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import img from '../../images/pexels-dziana-hasanbekava-5480827.jpg';
 import { getGenres } from "../../api/tmdb-api";
+import { useQuery } from '@tanstack/react-query';
+import Spinner from '../spinner';
+
 
 
 const formControl = 
@@ -23,36 +26,36 @@ const formControl =
 
 export default function FilterMoviesCard(props) {
 
-  const [genres, setGenres] = useState([{ id: '0', name: "All" }])
+  const { data, error, isPending, isError } = useQuery({
+    queryKey: ['genres'],
+    queryFn: getGenres,
+  });
 
-  useEffect(() => {
-    fetch(
-      "https://api.themoviedb.org/3/genre/movie/list?api_key=" +
-        import.meta.env.VITE_TMDB_KEY
-    )
-      .then(res => res.json())
-      .then(json => {
-        // console.log(json.genres) 
-        return json.genres
-      })
-      .then(apiGenres => {
-        setGenres([genres[0], ...apiGenres]);
-      });
-      // eslint-disable-next-line
-  }, []);
-
-    const handleChange = (e, type, value) => {
-    e.preventDefault()
-    props.onUserInput(type, value)   // NEW
+  if (isPending) {
+    return <Spinner />;
   }
 
-
-  const handleTextChange = e => {
-    handleChange(e, "name", e.target.value)
+  if (isError) {
+    return <h1>{error.message}</h1>;
   }
-  const handleGenreChange = e => {
-    handleChange(e, "genre", e.target.value)
+  const genres = data.genres;
+  if (genres[0].name !== "All"){
+    genres.unshift({ id: "0", name: "All" });
+  }
+
+  const handleChange = (e, type, value) => {
+    e.preventDefault();
+    props.onUserInput(type, value); 
   };
+
+  const handleTextChange = (e, props) => {
+    handleChange(e, "name", e.target.value);
+  };
+
+  const handleGenreChange = (e) => {
+    handleChange(e, "genre", e.target.value);
+  };
+
 
   return (
     <Card 
