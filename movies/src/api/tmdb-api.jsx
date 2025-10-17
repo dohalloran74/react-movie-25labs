@@ -92,3 +92,29 @@ export const getMovie = (args) => {
    });
   };
 
+//upcoming movie
+export const getUpcomingMovies = () => {
+  return fetch(
+    `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    })
+    .catch((error) => console.error("Error fetching upcoming movies:", error));
+};
+
+
+//trending
+export const getTrendingMoviesToday = () => {
+  return fetch(
+    `https://api.themoviedb.org/3/trending/movie/day?api_key=${
+      import.meta.env.VITE_TMDB_KEY
+    }`
+  ).then((response) => {
+    if (!response.ok) throw new Error(response.statusText);
+    return response.json();
+  });
+};
