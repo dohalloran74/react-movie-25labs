@@ -22,6 +22,12 @@ import { MoviesContext } from "../../contexts/moviesContext";
 // export default function MovieCard(movie) {
 export default function MovieCard({ movie, action }) {
 
+  const formattedDate = new Date(movie.release_date).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    
+    year: "numeric",
+  });
     const { favorites, addToFavorites } = useContext(MoviesContext);
 
     const isFavorite = favorites.includes(movie.id);
@@ -68,7 +74,8 @@ export default function MovieCard({ movie, action }) {
           <Grid size={{xs: 6}}>
             <Typography variant="h6" component="p">
               <CalendarIcon fontSize="small" />
-              {movie.release_date}
+                {formattedDate}
+               {/* {movie.release_date}*/}
             </Typography>
           </Grid>
           <Grid size={{xs: 6}}>

@@ -6,10 +6,10 @@ import Spinner from "../components/spinner";
 import AddToFavoritesIcon from "../components/cardIcons/addToFavorites";
 
 const TrendingTodayPage = () => {
-  const { data, error, isLoading, isError } = useQuery(
-    "trendingToday",
-    getTrendingMoviesToday
-  );
+  const { data, error, isLoading, isError } = useQuery({
+   queryKey: ["trendingToday"], //had to change both of these
+  queryFn:  getTrendingMoviesToday
+});
 
   if (isLoading) return <Spinner />;
   if (isError) return <h1>{error.message}</h1>;
